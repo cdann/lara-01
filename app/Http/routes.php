@@ -11,7 +11,7 @@
 |
 
 */
-Route::get('/', 'WelcomeController@index');
+Route::get('/', ['uses' => 'WelcomeController@index', 'middleware' => 'isAdmin', 'id' => '*']);
 
 Route::get('home', array('uses' =>'HomeController@index', 'as' => 'Home'));
 

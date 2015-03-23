@@ -3,6 +3,7 @@
 use Closure;
 use App\User;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Support\Facades\Session;
 
 class IsAdmin extends Authenticate {
 
@@ -39,6 +40,8 @@ class IsAdmin extends Authenticate {
 			}
 			if ($route && $route->hasParameter('id'))
 			{
+				if ($route->getParameter('id') == "*")
+					return $next($request);
 				$actions = $route->getAction();
 				if (array_key_exists('access', $actions) && $user->id == $route->getParameter('id'))
 					return $next($request);
