@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Http\Request as Req;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserController extends Controller {
@@ -43,6 +44,9 @@ class UserController extends Controller {
 
 		if ($this->auth->attempt($credentials, $request->has('remember')))
 		{
+			$useId = Auth::user()->getAuthIdentifier();;
+			if ( User::findOrFail($useId)->statut == 1)
+				Session::put('Admin', 'Admin');
 			return redirect()->secure($this->redirectPath());
 		}
 		return redirect()->secure($this->loginPath())
@@ -60,6 +64,8 @@ class UserController extends Controller {
 	public function getLogout()
 	{
 		$this->auth->logout();
+		if(Session::has('Admin'))
+			Session::forget('Admin');
 
 		return redirect()->secure('/');
 	}
@@ -84,7 +90,7 @@ class UserController extends Controller {
 
 		$mycreate['password'] = bcrypt($request->input('password'));
 		$this->auth->login($this->registrar->create($mycreate));
-
+		Session::put('Id', $this->auth->user()->getAuthIdentifier());
 		return redirect()->secure($this->redirectPath());
 	}
 
@@ -108,8 +114,6 @@ class UserController extends Controller {
 
 	public function seeView()
 	{
-		//die("hpuhpu");
-
 		$users = User::get();
 		return view('user.all', compact('users'));
 	}
@@ -164,16 +168,11 @@ class UserController extends Controller {
 		$myupdate = Request::all();
 		if ($myupdate["email"] == $user->email)
 			unset($myupdate["email"]);
-		//die(get_class ($request));
 		$validator = $this->registrar->validatorUpdate($myupdate);
 
 		if ($validator->fails())
 		{
 			$messages = $validator->messages();
-			/*echo "<pre>";
-			var_dump($myupdate);
-			echo "</pre>";
-			die($messages);*/
 			$this->throwValidationException(
 				$request, $validator
 			);

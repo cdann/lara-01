@@ -56,6 +56,8 @@
 		{{(Session::get('success'))}}
 	</div>
 @endif
+
+	</div>
 @if (Session::has('test'))
 	<div class="alert alert-warning">
 		{{Session::get('test')}}

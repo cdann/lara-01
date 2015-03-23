@@ -8,10 +8,26 @@ use Illuminate\Http\Request as Req;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Session;
 use Validator;
+use Illuminate\Support\Facades\Auth;
+use App\User;
 
 class ContactController extends Controller {
 
+	public function get()
+	{
+			try
+			{
+			    $user = User::findOrFail(Auth::id());
+			}
+			catch(ModelNotFoundException $e)
+			{
+				return Redirect::back()->with(["error" => "l'utilisateur n'existe pas"]);
+			}
+			return view('contact', ['mail' => $user->email]);
+
+	}
 
 	public function post()
 	{
@@ -32,7 +48,7 @@ class ContactController extends Controller {
 			$b = "Le mail n'a pas pu etre envoyé.";
 		else
 			$b = "le mail a bien ete envoyé";
-		return Redirect::back()->with(["test" => $b]);
+		return Redirect::back()->with(["success" => $b]);
 
 
 	}

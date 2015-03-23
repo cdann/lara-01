@@ -19,7 +19,7 @@ Contactez moi
 
 	<div class="form-group">
 	    {!! Form::label("email", 'email', ['class' => 'form-label']) !!}
-	    {!! Form::email("email", null, ['class' => 'form-control']) !!}
+	    {!! Form::email("email", $mail, ['class' => 'form-control']) !!}
 	    {!! $errors->first('email', '<div class="form-error">:message</pre>') !!}
 
 	</div>

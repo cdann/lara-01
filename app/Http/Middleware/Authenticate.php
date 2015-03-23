@@ -40,7 +40,6 @@ class Authenticate {
 			}
 			else
 			{
-				//die("ok");
 				return redirect()->secure('/user/login');
 			}
 		}

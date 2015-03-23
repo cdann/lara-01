@@ -11,7 +11,7 @@
 |
 
 */
-Route::get('/', ['uses' => 'WelcomeController@index', 'middleware' => 'isAdmin', 'id' => '*']);
+Route::get('/', ['uses' => 'WelcomeController@index']);
 
 Route::get('home', array('uses' =>'HomeController@index', 'as' => 'Home'));
 
@@ -37,9 +37,7 @@ Route::controllers([
 
 Route::group(['prefix' => 'contact'], function()
 {
-	Route::get('/', ['as' => 'ContactForm', function(){
-		return view('contact');
-	}]);
+	Route::get('/', ['as' => 'ContactForm', 'uses' =>'ContactController@get']);
 	Route::post('/',  array('uses' =>'ContactController@post', 'as' => 'ContactPost'));
 });
 
