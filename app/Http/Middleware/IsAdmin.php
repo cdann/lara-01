@@ -29,10 +29,14 @@ class IsAdmin extends Authenticate {
 		$route = $request->route();
 		if ($auth = $this->auth->user())
 		{
+			if(Session::has('Admin'))
+				return $next($request);
 			$user = User::findOrFail($auth->getAuthIdentifier());
-				if($user->statut == 1)
-					return $next($request);
-
+			if($user->statut == 1)
+			{
+				Session::put('Admin', 'Admin');
+				return $next($request);
+			}
 			if ($route && $route->hasParameter('id'))
 			{
 				$actions = $route->getAction();
